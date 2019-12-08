@@ -2,6 +2,7 @@
 """The app module, containing the app factory function."""
 from flask import Flask
 from conduit.extensions import bcrypt, cache, db, migrate, jwt, cors
+from flask_swagger_ui import get_swaggerui_blueprint
 
 from conduit import commands, user, profile, articles, root
 from conduit.settings import ProdConfig
@@ -35,6 +36,17 @@ def register_extensions(app):
 
 
 def register_blueprints(app):
+    SWAGGER_URL = '/api/docs'  # URL for exposing Swagger UI (without trailing '/')
+    API_URL = 'http://127.0.0.1:5000/swagger'  # Our API url (can of course be a local resource)
+
+    # Call factory function to create our blueprint
+    swaggerui_blueprint = get_swaggerui_blueprint(
+    SWAGGER_URL,  # Swagger UI static files will be mapped to '{SWAGGER_URL}/dist/'
+    API_URL,
+    config={  # Swagger UI config overrides
+        'app_name': "Test application"
+        },
+    )
     """Register Flask blueprints."""
     origins = app.config.get('CORS_ORIGIN_WHITELIST', '*')
     cors.init_app(user.views.blueprint, origins=origins)
@@ -47,6 +59,7 @@ def register_blueprints(app):
     app.register_blueprint(profile.views.blueprint)
     app.register_blueprint(articles.views.blueprint)
     app.register_blueprint(root.views.blueprint)
+    app.register_blueprint(swaggerui_blueprint, url_prefix=SWAGGER_URL)
 
 
 def register_errorhandlers(app):
