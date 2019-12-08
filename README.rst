@@ -72,3 +72,10 @@ This will generate a new migration script. Then run ::
 To apply the migration.
 
 For a full migration command reference, run ``flask db --help``.
+
+Docs
+-----
+
+You can see @ localhost/swagger
+
+or @ postman to see the collection https://www.getpostman.com/collections/789a6348be7a99bfe9d2
